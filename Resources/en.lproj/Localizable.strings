@@ -8,6 +8,10 @@
 "menu.settings" = "Settings…";
 "menu.quit" = "Quit Spacer";
 
+/* Key equivalents in the settings window */
+"mainmenu.window" = "Window";
+"mainmenu.close" = "Close";
+
 /* Settings */
 "settings.title" = "Spacer";
 "settings.gaps" = "Gaps";

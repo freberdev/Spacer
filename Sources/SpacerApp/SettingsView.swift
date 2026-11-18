@@ -80,7 +80,7 @@ private struct GapRow: View {
                     value: Binding(
                         get: { WidthScale.fraction(for: row.width) },
                         set: { model.setWidth(WidthScale.width(at: $0), for: row.id) }),
-                    onEditingChanged: { model.setHighlighted(row.id, $0) })
+                    onEditingChanged: { model.setEditing(row.id, $0) })
                     .accessibilityLabel(L("settings.gap.width", number))
                 Text(String(row.width))
                     .monospacedDigit()
@@ -101,6 +101,6 @@ private struct GapRow: View {
                     .padding(.leading, 32)
             }
         }
-        .onHover { model.setHighlighted(row.id, $0) }
+        .onHover { model.setHovered(row.id, $0) }
     }
 }

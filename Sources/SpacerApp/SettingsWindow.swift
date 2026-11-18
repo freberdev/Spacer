@@ -33,6 +33,8 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         // Spacer is not the active app when this is called from a gap's menu.
         NSApp.activateInsistently()
         window?.makeKeyAndOrderFront(nil)
+        // Activation is only a request. The window comes forward even when it is not granted.
+        window?.orderFrontRegardless()
     }
 
     func windowWillClose(_ notification: Notification) {

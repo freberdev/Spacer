@@ -11,6 +11,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var layoutPrinter: Task<Void, Never>?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        // Two copies would each put the same gaps in the menu bar and overwrite each other's list.
+        if handOverToRunningCopy() {
+            NSApp.terminate(nil)
+            return
+        }
+        installMainMenu()
+
+        // A gap that is only there when the app has been started by hand is of little use.
+        if LoginItem.isInstalled && !preferences.didRequestLoginItem {
+            preferences.didRequestLoginItem = true
+            try? LoginItem.setEnabled(true)
+        }
+
         store.onChange = { [weak self] in self?.storeChanged() }
         items.populateMenu = { [weak self] menu, id in self?.populate(menu, for: id) }
 
@@ -27,12 +40,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         } else if store.gaps.isEmpty {
             // Without gaps nothing of the app is on screen.
             settings.show()
-        }
-
-        // A gap that is only there when the app has been started by hand is of little use.
-        if LoginItem.isInstalled && !preferences.didRequestLoginItem {
-            preferences.didRequestLoginItem = true
-            try? LoginItem.setEnabled(true)
         }
 
         // Two options on the command line help during development:
@@ -53,6 +60,34 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         return false
     }
 
+    /// If another copy of Spacer is running, asks it to show its settings and returns true.
+    /// That happens when the app is opened from a second place, such as the disk image.
+    private func handOverToRunningCopy() -> Bool {
+        guard let identifier = Bundle.main.bundleIdentifier else { return false }
+        let others = NSRunningApplication.runningApplications(withBundleIdentifier: identifier)
+            .filter { $0 != NSRunningApplication.current }
+        guard let other = others.first else { return false }
+        if let url = other.bundleURL { NSWorkspace.shared.open(url) }
+        return true
+    }
+
+    /// The menu bar never shows this menu, since Spacer has no Dock icon, but it is what makes
+    /// ⌘W and ⌘Q work in the settings window.
+    private func installMainMenu() {
+        let appMenu = NSMenu()
+        appMenu.addItem(withTitle: L("menu.quit"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        let windowMenu = NSMenu(title: L("mainmenu.window"))
+        windowMenu.addItem(withTitle: L("mainmenu.close"), action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")
+
+        let main = NSMenu()
+        for submenu in [appMenu, windowMenu] {
+            let item = NSMenuItem()
+            item.submenu = submenu
+            main.addItem(item)
+        }
+        NSApp.mainMenu = main
+    }
+
     private func storeChanged() {
         items.sync()
         settingsModel.refresh()
@@ -64,7 +99,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         GapMenu.populate(menu, width: gap.width, actions: GapMenu.Actions(
             setWidth: { [weak self] in self?.store.setWidth($0, for: id) },
             addGap: { [weak self] in self?.addGap(leftOf: id) },
-            remove: { [weak self] in self?.store.remove(id) },
+            // Not from inside the menu's own action: removing the gap takes the menu with it.
+            remove: { [weak self] in Task { @MainActor in self?.store.remove(id) } },
             openSettings: { [weak self] in self?.settings.show() },
             quit: { NSApp.terminate(nil) }))
     }

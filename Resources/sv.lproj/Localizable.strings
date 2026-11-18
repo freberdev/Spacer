@@ -8,6 +8,10 @@
 "menu.settings" = "Inställningar…";
 "menu.quit" = "Avsluta Spacer";
 
+/* Key equivalents in the settings window */
+"mainmenu.window" = "Fönster";
+"mainmenu.close" = "Stäng";
+
 /* Settings */
 "settings.title" = "Spacer";
 "settings.gaps" = "Mellanrum";

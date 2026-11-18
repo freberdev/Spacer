@@ -38,11 +38,13 @@ Good to know:
 
 The list of gaps, with an identifier and a width for each, is kept in the app's preferences (`com.freberdev.spacer`). The place of each gap in the menu bar is kept by macOS in the same preferences. Removing a gap removes what was stored about it. Nothing leaves your Mac.
 
+Quit Spacer, then
+
 ```bash
 defaults delete com.freberdev.spacer
 ```
 
-starts over from nothing.
+starts over from nothing. That includes the note that opening at login has been turned on once, so the next start from the Applications folder turns it on again.
 
 ## Building
 
@@ -56,7 +58,7 @@ scripts/test.sh
 scripts/build-app.sh --install
 ```
 
-The script builds `build/Spacer.app`, signs it and, with `--install`, copies it to `/Applications`. Without `--install` it only builds. It refuses to replace an app named Spacer that is not this one.
+The script builds `build/Spacer.app`, signs it and, with `--install`, copies it to `/Applications`. Without `--install` it only builds. A running Spacer is quit first and is not started again; open it yourself afterwards. The script refuses to replace an app named Spacer that is not this one.
 
 Spacer has been run on macOS 27.2 on Apple silicon. It is built for macOS 26 and for Intel as well, but has not been tried on either.
 
@@ -93,7 +95,7 @@ build/Spacer.app/Contents/MacOS/Spacer -printLayout YES -openMenu YES
 
 `-printLayout` prints the id, width and position of every gap each time something changes, and whether the gap is in view. `-openMenu` opens the menu of the first gap shortly after start.
 
-A build started this way shares its preferences with an installed Spacer.
+A build started this way shares its preferences with an installed Spacer. Only one copy runs at a time: a second one asks the first to show its settings and quits.
 
 ### Layout
 

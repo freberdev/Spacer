@@ -147,6 +147,17 @@ import Testing
         #expect(leftovers.isEmpty)
     }
 
+    @Test func rapidWidthChangesSurviveReload() {
+        defer { temporary.remove() }
+        let store = GapStore(defaults: defaults)
+        let gaps = (0..<5).map { _ in store.add() }
+        for step in 0..<400 {
+            store.setWidth(4 + (step * 7) % 397, for: gaps[step % 5].id)
+        }
+        #expect(GapStore(defaults: defaults).gaps == store.gaps)
+        #expect(store.gaps.map(\.id) == gaps.map(\.id))
+    }
+
     @Test func addWritesPositionRightmost() {
         defer { temporary.remove() }
         let store = GapStore(defaults: defaults)

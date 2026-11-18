@@ -41,7 +41,8 @@ final class GapItem: NSObject, NSMenuDelegate {
             rect: .zero, options: [.mouseEnteredAndExited, .activeAlways, .inVisibleRect], owner: self))
     }
 
-    /// The left edge of the gap on screen, or nil before macOS has placed it.
+    /// The left edge of the gap's place in the menu bar, also when the gap is not in view.
+    /// Nil only when the status item has no window.
     var screenX: Double? {
         guard let window = statusItem.button?.window else { return nil }
         return Double(window.frame.minX)
@@ -72,6 +73,11 @@ final class GapItem: NSObject, NSMenuDelegate {
 
     func menuNeedsUpdate(_ menu: NSMenu) {
         populateMenu?(menu)
+    }
+
+    func menuDidClose(_ menu: NSMenu) {
+        // No exit event arrives when the pointer left while the menu was open.
+        isHovered = statusItem.button?.window?.frame.contains(NSEvent.mouseLocation) ?? false
     }
 
     /// Opens the gap's menu, as a click would.

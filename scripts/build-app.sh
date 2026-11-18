@@ -23,10 +23,13 @@ bundle_id() { # bundle_id <app>
 }
 
 # Never replace somebody else's app that happens to share the name.
-if [ "$INSTALL" = 1 ] && [ -e "$INSTALLED" ] && [ "$(bundle_id "$INSTALLED")" != "$BUNDLE_ID" ]; then
-    echo "$INSTALLED is a different app ($(bundle_id "$INSTALLED")). Move it away first." >&2
-    exit 1
-fi
+refuse_foreign_app() {
+    if [ -e "$INSTALLED" ] && [ "$(bundle_id "$INSTALLED")" != "$BUNDLE_ID" ]; then
+        echo "$INSTALLED is a different app ($(bundle_id "$INSTALLED")). Move it away first." >&2
+        exit 1
+    fi
+}
+[ "$INSTALL" = 1 ] && refuse_foreign_app
 
 swift build -c release ${ARCH_FLAGS[@]+"${ARCH_FLAGS[@]}"}
 BIN="$(swift build -c release ${ARCH_FLAGS[@]+"${ARCH_FLAGS[@]}"} --show-bin-path)/SpacerApp"
@@ -68,6 +71,7 @@ if [ "$INSTALL" = 1 ]; then
         sleep 0.5
     done
     pkill -f "^$INSTALLED/Contents/MacOS/Spacer" 2>/dev/null || true
+    refuse_foreign_app
     rm -rf "$INSTALLED"
     cp -R "$APP" "$INSTALLED"
     echo "Installed $INSTALLED"

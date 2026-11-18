@@ -20,6 +20,7 @@ final class SettingsModel {
     @ObservationIgnored private let store: GapStore
     @ObservationIgnored private let items: GapItemsController
     @ObservationIgnored private let addGap: () -> Void
+    @ObservationIgnored private var highlights = Highlights()
 
     init(store: GapStore, items: GapItemsController, addGap: @escaping () -> Void) {
         self.store = store
@@ -51,13 +52,19 @@ final class SettingsModel {
         store.setWidth(width, for: id)
     }
 
-    /// Shows or hides the frame around a gap in the menu bar, so it is clear which row is which.
-    func setHighlighted(_ id: Gap.ID, _ on: Bool) {
-        items.setHighlighted(id, on)
+    /// The pointer came over a row or left it. While it is over the row the gap shows its
+    /// frame in the menu bar, so it is clear which row is which.
+    func setHovered(_ id: Gap.ID, _ on: Bool) {
+        items.setHighlighted(id, highlights.setHovered(id, on))
+    }
+
+    /// A row's slider was grabbed or let go.
+    func setEditing(_ id: Gap.ID, _ on: Bool) {
+        items.setHighlighted(id, highlights.setEditing(id, on))
     }
 
     func clearHighlights() {
-        rows.forEach { items.setHighlighted($0.id, false) }
+        highlights.clear().forEach { items.setHighlighted($0, false) }
     }
 
     func setOpenAtLogin(_ on: Bool) {
