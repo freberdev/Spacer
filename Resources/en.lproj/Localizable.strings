@@ -7,3 +7,17 @@
 "menu.remove" = "Remove This Gap";
 "menu.settings" = "Settings…";
 "menu.quit" = "Quit Spacer";
+
+/* Settings */
+"settings.title" = "Spacer";
+"settings.gaps" = "Gaps";
+"settings.gaps.empty" = "There are no gaps in the menu bar.";
+"settings.add" = "New Gap";
+"settings.hint" = "To move a gap, hold ⌘ and drag it in the menu bar. Point at a gap to see where it is, and click it to change it.";
+"settings.gap.width" = "Width of gap %ld";
+"settings.gap.remove" = "Remove this gap";
+"settings.gap.remove.label" = "Remove gap %ld";
+"settings.gap.hidden" = "Not showing in the menu bar right now";
+"settings.openAtLogin" = "Open Spacer at login";
+"settings.openAtLogin.failed" = "macOS did not accept the change. Try under System Settings > General > Login Items.";
+"settings.version" = "Version %@";
