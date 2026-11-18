@@ -6,6 +6,7 @@ let package = Package(
     platforms: [.macOS("26.0")],
     targets: [
         .target(name: "SpacerCore"),
+        .executableTarget(name: "SpacerApp", dependencies: ["SpacerCore"]),
         .testTarget(name: "SpacerCoreTests", dependencies: ["SpacerCore"]),
     ]
 )
