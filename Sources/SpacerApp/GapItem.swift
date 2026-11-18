@@ -9,20 +9,17 @@ final class GapItem: NSObject, NSMenuDelegate {
     var populateMenu: ((NSMenu) -> Void)?
 
     private let statusItem: NSStatusItem
-    private let outline = OutlineView()
+    private let view = GapView()
+    private var gap: Gap
     private var isHovered = false { didSet { updateOutline() } }
     private var isFlashing = false { didSet { updateOutline() } }
     private var flash: Task<Void, Never>?
 
     var isHighlighted = false { didSet { updateOutline() } }
 
-    var width: Int {
-        get { Int(statusItem.length) }
-        set { statusItem.length = CGFloat(newValue) }
-    }
-
     init(gap: Gap) {
         id = gap.id
+        self.gap = gap
         statusItem = NSStatusBar.system.statusItem(withLength: CGFloat(gap.width))
         super.init()
         // The place stored under this name is applied when the name is set.
@@ -33,12 +30,38 @@ final class GapItem: NSObject, NSMenuDelegate {
         statusItem.menu = menu
 
         guard let button = statusItem.button else { return }
-        button.setAccessibilityLabel(L("gap.accessibility"))
-        outline.frame = button.bounds
-        outline.autoresizingMask = [.width, .height]
-        button.addSubview(outline)
+        view.frame = button.bounds
+        view.autoresizingMask = [.width, .height]
+        button.addSubview(view)
         button.addTrackingArea(NSTrackingArea(
             rect: .zero, options: [.mouseEnteredAndExited, .activeAlways, .inVisibleRect], owner: self))
+        show(gap)
+    }
+
+    /// Takes over the width, the style and the name of the gap.
+    func apply(_ gap: Gap) {
+        guard gap != self.gap else { return }
+        self.gap = gap
+        show(gap)
+    }
+
+    private func show(_ gap: Gap) {
+        view.style = gap.style
+        var length = CGFloat(gap.width)
+        if let text = gap.visibleText {
+            let title = NSAttributedString(string: text, attributes: [
+                .font: NSFont.menuBarFont(ofSize: 0),
+                .foregroundColor: NSColor.secondaryLabelColor,
+            ])
+            statusItem.button?.attributedTitle = title
+            // A name is never cut off: the gap grows to fit it.
+            length = max(length, title.size().width.rounded(.up))
+        } else {
+            statusItem.button?.title = ""
+        }
+        statusItem.length = length
+        let name = gap.displayName
+        statusItem.button?.setAccessibilityLabel(name.isEmpty ? L("gap.accessibility") : name)
     }
 
     /// The left edge of the gap's place in the menu bar, also when the gap is not in view.
@@ -89,6 +112,6 @@ final class GapItem: NSObject, NSMenuDelegate {
     @objc(mouseExited:) func mouseExited(with event: NSEvent) { isHovered = false }
 
     private func updateOutline() {
-        outline.isShown = isHovered || isHighlighted || isFlashing
+        view.showsFrame = isHovered || isHighlighted || isFlashing
     }
 }

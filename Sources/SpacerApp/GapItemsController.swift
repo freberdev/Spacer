@@ -23,7 +23,7 @@ final class GapItemsController {
         }
         for gap in store.gaps {
             if let item = items[gap.id] {
-                if item.width != gap.width { item.width = gap.width }
+                item.apply(gap)
             } else {
                 let item = GapItem(gap: gap)
                 item.populateMenu = { [weak self] menu in self?.populateMenu?(menu, gap.id) }
@@ -60,6 +60,7 @@ final class GapItemsController {
             let x = items[gap.id]?.screenX.map { String(Int($0)) } ?? "-"
             let showing = items[gap.id]?.isShowing ?? false
             return "gap \(gap.id.uuidString.lowercased()) width=\(gap.width) x=\(x) showing=\(showing)"
+                + " style=\(gap.style.rawValue) name=\"\(gap.displayName)\""
         }.joined(separator: "\n")
     }
 }
