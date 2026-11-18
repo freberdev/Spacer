@@ -158,6 +158,61 @@ import Testing
         #expect(store.gaps.map(\.id) == gaps.map(\.id))
     }
 
+    @Test func setNamePersists() {
+        defer { temporary.remove() }
+        let store = GapStore(defaults: defaults)
+        let gap = store.add()
+        store.setName("Jobb", for: gap.id)
+        #expect(GapStore(defaults: defaults).gaps.first?.name == "Jobb")
+    }
+
+    @Test func setStylePersists() {
+        defer { temporary.remove() }
+        let store = GapStore(defaults: defaults)
+        let gap = store.add()
+        store.setStyle(.line, for: gap.id)
+        #expect(GapStore(defaults: defaults).gaps.first?.style == .line)
+    }
+
+    @Test func settingTheSameNameOrStyleDoesNotNotify() {
+        defer { temporary.remove() }
+        let store = GapStore(defaults: defaults)
+        let gap = store.add()
+        var changes = 0
+        store.onChange = { changes += 1 }
+        store.setName("", for: gap.id)
+        store.setStyle(.empty, for: gap.id)
+        #expect(changes == 0)
+        store.setName("Jobb", for: gap.id)
+        store.setName("Jobb", for: gap.id)
+        store.setStyle(.dot, for: gap.id)
+        store.setStyle(.dot, for: gap.id)
+        #expect(changes == 2)
+    }
+
+    @Test func setNameForUnknownIdDoesNothing() {
+        defer { temporary.remove() }
+        let store = GapStore(defaults: defaults)
+        let gap = store.add()
+        var changes = 0
+        store.onChange = { changes += 1 }
+        store.setName("Jobb", for: UUID())
+        store.setStyle(.line, for: UUID())
+        #expect(store.gaps == [gap])
+        #expect(changes == 0)
+    }
+
+    @Test func storedListFromTheFirstVersionIsKept() {
+        defer { temporary.remove() }
+        let first = UUID(), second = UUID()
+        let json = #"[{"id":"\#(first.uuidString)","width":24},{"id":"\#(second.uuidString)","width":80}]"#
+        defaults.set(Data(json.utf8), forKey: GapStore.storageKey)
+        let gaps = GapStore(defaults: defaults).gaps
+        #expect(gaps.map(\.id) == [first, second])
+        #expect(gaps.map(\.width) == [24, 80])
+        #expect(gaps.allSatisfy { $0.style == .empty && $0.name == "" })
+    }
+
     @Test func addWritesPositionRightmost() {
         defer { temporary.remove() }
         let store = GapStore(defaults: defaults)

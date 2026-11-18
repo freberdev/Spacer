@@ -39,6 +39,20 @@ public final class GapStore {
         changed()
     }
 
+    public func setName(_ name: String, for id: Gap.ID) {
+        guard let index = gaps.firstIndex(where: { $0.id == id }) else { return }
+        let before = gaps[index].name
+        gaps[index].setName(name)
+        guard gaps[index].name != before else { return }
+        changed()
+    }
+
+    public func setStyle(_ style: GapStyle, for id: Gap.ID) {
+        guard let index = gaps.firstIndex(where: { $0.id == id }), gaps[index].style != style else { return }
+        gaps[index].style = style
+        changed()
+    }
+
     /// Removes the gap and everything macOS has stored about its status item.
     public func remove(_ id: Gap.ID) {
         guard let index = gaps.firstIndex(where: { $0.id == id }) else { return }
