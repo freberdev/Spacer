@@ -33,7 +33,7 @@ Good to know:
 
 - A name is one line of at most 30 characters. It can be a word, a character or an emoji. A gap that shows its name is at least as wide as the name needs, whatever the slider says, and a gap set to show a name it does not have stays empty.
 - macOS puts its usual spacing around a gap, as it does around an icon: 8 points on each side. A gap with the width 24 therefore moves its neighbours 40 points apart, and the narrowest gap takes 20.
-- When the menu bar is full, macOS hides the items furthest to the left, gaps included. A gap that is not in view is marked in the settings window, where you can still make it narrower or remove it.
+- When the menu bar is full, macOS hides the items furthest to the left, gaps included. A gap that is not in view is marked in the settings window, where you can still make it narrower, shorten its name or remove it.
 - A gap added from the settings window is placed furthest to the right among the icons of your apps, next to Control Center, where it is always in view.
 - When the last gap is removed the settings window opens, since nothing of the app is otherwise on screen.
 - Quitting Spacer takes the gaps out of the menu bar. They come back in the same places the next time it starts.
@@ -97,7 +97,7 @@ Two command-line options help when working on Spacer:
 build/Spacer.app/Contents/MacOS/Spacer -printLayout YES -openMenu YES
 ```
 
-`-printLayout` prints the id, width and position of every gap each time something changes, and whether the gap is in view. `-openMenu` opens the menu of the first gap shortly after start.
+`-printLayout` prints the id, width, length, position, style and name of every gap each time something changes, and whether the gap is in view. `-openMenu` opens the menu of the first gap shortly after start.
 
 A build started this way shares its preferences with an installed Spacer. Only one copy runs at a time: a second one asks the first to show its settings and quits.
 
@@ -108,7 +108,7 @@ A build started this way shares its preferences with an installed Spacer. Only o
 - `Resources` holds `Info.plist`, the icon and the English and Swedish strings.
 - `scripts/make-icon.swift` draws the icon: `swift scripts/make-icon.swift`.
 
-A gap is an empty `NSStatusItem` with an autosave name of its own, which is what lets macOS remember the place of each gap separately. A new status item without a stored place is put at the far left, where a full menu bar hides it, so Spacer writes the place of a new gap before it creates the item.
+A gap is an `NSStatusItem` without an icon, with an autosave name of its own, which is what lets macOS remember the place of each gap separately. A new status item without a stored place is put at the far left, where a full menu bar hides it, so Spacer writes the place of a new gap before it creates the item.
 
 ## License
 

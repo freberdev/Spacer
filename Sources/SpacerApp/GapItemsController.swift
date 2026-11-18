@@ -59,7 +59,8 @@ final class GapItemsController {
         GapOrder.leftToRight(store.gaps, positions: positions()).map { gap in
             let x = items[gap.id]?.screenX.map { String(Int($0)) } ?? "-"
             let showing = items[gap.id]?.isShowing ?? false
-            return "gap \(gap.id.uuidString.lowercased()) width=\(gap.width) x=\(x) showing=\(showing)"
+            let length = items[gap.id]?.length ?? 0
+            return "gap \(gap.id.uuidString.lowercased()) width=\(gap.width) length=\(length) x=\(x) showing=\(showing)"
                 + " style=\(gap.style.rawValue) name=\"\(gap.displayName)\""
         }.joined(separator: "\n")
     }

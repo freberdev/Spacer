@@ -13,9 +13,16 @@
 "menu.settings" = "Settings…";
 "menu.quit" = "Quit Spacer";
 
-/* Key equivalents in the settings window */
+/* Key equivalents in the settings window. The menus themselves are never shown. */
 "mainmenu.window" = "Window";
 "mainmenu.close" = "Close";
+"mainmenu.edit" = "Edit";
+"mainmenu.undo" = "Undo";
+"mainmenu.redo" = "Redo";
+"mainmenu.cut" = "Cut";
+"mainmenu.copy" = "Copy";
+"mainmenu.paste" = "Paste";
+"mainmenu.selectAll" = "Select All";
 
 /* Settings */
 "settings.title" = "Spacer";

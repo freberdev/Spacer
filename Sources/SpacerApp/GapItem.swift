@@ -47,22 +47,15 @@ final class GapItem: NSObject, NSMenuDelegate {
 
     private func show(_ gap: Gap) {
         view.style = gap.style
-        var length = CGFloat(gap.width)
-        if let text = gap.visibleText {
-            let title = NSAttributedString(string: text, attributes: [
-                .font: NSFont.menuBarFont(ofSize: 0),
-                .foregroundColor: NSColor.secondaryLabelColor,
-            ])
-            statusItem.button?.attributedTitle = title
-            // A name is never cut off: the gap grows to fit it.
-            length = max(length, title.size().width.rounded(.up))
-        } else {
-            statusItem.button?.title = ""
-        }
-        statusItem.length = length
+        view.text = gap.visibleText
+        let textWidth = gap.visibleText.map { Double(GapView.title($0).size().width) }
+        statusItem.length = CGFloat(gap.length(textWidth: textWidth))
         let name = gap.displayName
         statusItem.button?.setAccessibilityLabel(name.isEmpty ? L("gap.accessibility") : name)
     }
+
+    /// How long the status item is, which is more than the gap's width when a name needs it.
+    var length: Int { Int(statusItem.length) }
 
     /// The left edge of the gap's place in the menu bar, also when the gap is not in view.
     /// Nil only when the status item has no window.

@@ -78,6 +78,32 @@ import Testing
         #expect(gap.visibleText == nil)
     }
 
+    @Test func visibleTextIsTrimmed() {
+        var gap = Gap(style: .name)
+        gap.setName(" Jobb ")
+        #expect(gap.visibleText == "Jobb")
+    }
+
+    @Test func aGapIsAsWideAsItsWidthWhenItShowsNoText() {
+        #expect(Gap(width: 24).length(textWidth: nil) == 24)
+        #expect(Gap(width: 4).length(textWidth: nil) == 4)
+    }
+
+    @Test func aGapGrowsToFitItsText() {
+        #expect(Gap(width: 4).length(textWidth: 30.2) == 31)
+        #expect(Gap(width: 24).length(textWidth: 24.0) == 24)
+    }
+
+    @Test func aWideGapKeepsItsWidthAroundAShortText() {
+        #expect(Gap(width: 60).length(textWidth: 30.2) == 60)
+    }
+
+    @Test func aTextWidthThatIsNotANumberIsIgnored() {
+        #expect(Gap(width: 24).length(textWidth: .nan) == 24)
+        #expect(Gap(width: 24).length(textWidth: -5) == 24)
+        #expect(Gap(width: 24).length(textWidth: .infinity) == 24)
+    }
+
     @Test func nameAndStyleSurviveTheRoundTrip() throws {
         var gap = Gap(width: 80)
         gap.setName("🎧 Ljud")

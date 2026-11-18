@@ -13,9 +13,16 @@
 "menu.settings" = "Inställningar…";
 "menu.quit" = "Avsluta Spacer";
 
-/* Key equivalents in the settings window */
+/* Key equivalents in the settings window. The menus themselves are never shown. */
 "mainmenu.window" = "Fönster";
 "mainmenu.close" = "Stäng";
+"mainmenu.edit" = "Redigera";
+"mainmenu.undo" = "Ångra";
+"mainmenu.redo" = "Gör om";
+"mainmenu.cut" = "Klipp ut";
+"mainmenu.copy" = "Kopiera";
+"mainmenu.paste" = "Klistra in";
+"mainmenu.selectAll" = "Markera allt";
 
 /* Settings */
 "settings.title" = "Spacer";

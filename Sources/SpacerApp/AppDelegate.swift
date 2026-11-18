@@ -72,15 +72,24 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     /// The menu bar never shows this menu, since Spacer has no Dock icon, but it is what makes
-    /// ⌘W and ⌘Q work in the settings window.
+    /// ⌘W and ⌘Q work in the settings window, and ⌘V, ⌘C, ⌘X, ⌘A and ⌘Z in its name fields.
     private func installMainMenu() {
         let appMenu = NSMenu()
         appMenu.addItem(withTitle: L("menu.quit"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         let windowMenu = NSMenu(title: L("mainmenu.window"))
         windowMenu.addItem(withTitle: L("mainmenu.close"), action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")
 
+        let editMenu = NSMenu(title: L("mainmenu.edit"))
+        editMenu.addItem(withTitle: L("mainmenu.undo"), action: Selector(("undo:")), keyEquivalent: "z")
+        editMenu.addItem(withTitle: L("mainmenu.redo"), action: Selector(("redo:")), keyEquivalent: "Z")
+        editMenu.addItem(.separator())
+        editMenu.addItem(withTitle: L("mainmenu.cut"), action: #selector(NSText.cut(_:)), keyEquivalent: "x")
+        editMenu.addItem(withTitle: L("mainmenu.copy"), action: #selector(NSText.copy(_:)), keyEquivalent: "c")
+        editMenu.addItem(withTitle: L("mainmenu.paste"), action: #selector(NSText.paste(_:)), keyEquivalent: "v")
+        editMenu.addItem(withTitle: L("mainmenu.selectAll"), action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
+
         let main = NSMenu()
-        for submenu in [appMenu, windowMenu] {
+        for submenu in [appMenu, editMenu, windowMenu] {
             let item = NSMenuItem()
             item.submenu = submenu
             main.addItem(item)
@@ -110,7 +119,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func setStyle(_ style: GapStyle, for id: Gap.ID) {
         store.setStyle(style, for: id)
         let gap = store.gaps.first { $0.id == id }
-        if style == .name, gap?.displayName.isEmpty == true { settings.show() }
+        if style == .name, gap?.displayName.isEmpty == true {
+            // The frame shows which gap the empty name field in the window belongs to.
+            items.flash(id)
+            settings.show()
+        }
     }
 
     /// Adds a gap and shows its frame for a moment, so it can be found.

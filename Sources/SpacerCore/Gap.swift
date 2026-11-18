@@ -50,6 +50,13 @@ public struct Gap: Codable, Equatable, Identifiable, Sendable {
         return displayName
     }
 
+    /// How long the gap's status item is, given the width of the text it shows, if any.
+    /// A name is never cut off: the gap grows to fit it.
+    public func length(textWidth: Double?) -> Double {
+        guard let textWidth, textWidth.isFinite, textWidth > 0 else { return Double(width) }
+        return max(Double(width), textWidth.rounded(.up))
+    }
+
     /// Makes a name one line and cuts it to the longest allowed. Spaces at the ends are kept,
     /// so a name can be typed one character at a time; `displayName` leaves them out.
     static func cleaned(_ name: String) -> String {
