@@ -74,6 +74,11 @@ final class GapItem: NSObject, NSMenuDelegate {
         populateMenu?(menu)
     }
 
+    /// Opens the gap's menu, as a click would.
+    func openMenu() {
+        statusItem.button?.performClick(nil)
+    }
+
     @objc(mouseEntered:) func mouseEntered(with event: NSEvent) { isHovered = true }
     @objc(mouseExited:) func mouseExited(with event: NSEvent) { isHovered = false }
 

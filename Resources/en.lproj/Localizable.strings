@@ -1,2 +1,9 @@
 /* Menu bar */
 "gap.accessibility" = "Gap";
+
+/* The menu of a gap */
+"menu.width" = "Width";
+"menu.add" = "New Gap";
+"menu.remove" = "Remove This Gap";
+"menu.settings" = "Settings…";
+"menu.quit" = "Quit Spacer";

@@ -40,6 +40,10 @@ final class GapItemsController {
         items[id]?.flashOutline()
     }
 
+    func openMenu(_ id: Gap.ID) {
+        items[id]?.openMenu()
+    }
+
     /// The left edge of each gap macOS has placed.
     func positions() -> [Gap.ID: Double] {
         items.compactMapValues(\.screenX)

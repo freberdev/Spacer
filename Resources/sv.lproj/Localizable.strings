@@ -1,2 +1,9 @@
 /* Menu bar */
 "gap.accessibility" = "Mellanrum";
+
+/* The menu of a gap */
+"menu.width" = "Bredd";
+"menu.add" = "Nytt mellanrum";
+"menu.remove" = "Ta bort det här mellanrummet";
+"menu.settings" = "Inställningar…";
+"menu.quit" = "Avsluta Spacer";
