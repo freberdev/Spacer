@@ -8,6 +8,9 @@ final class SettingsModel {
     struct Row: Identifiable, Equatable {
         let id: Gap.ID
         var width: Int
+        /// As it was typed, so that the name field does not change under the user's hands.
+        var name: String
+        var style: GapStyle
         /// The gap is not in view in the menu bar right now.
         var isHidden: Bool
     }
@@ -33,7 +36,7 @@ final class SettingsModel {
     func refresh() {
         let hidden = items.hidden()
         let current = GapOrder.leftToRight(store.gaps, positions: items.positions()).map {
-            Row(id: $0.id, width: $0.width, isHidden: hidden.contains($0.id))
+            Row(id: $0.id, width: $0.width, name: $0.name, style: $0.style, isHidden: hidden.contains($0.id))
         }
         if current != rows { rows = current }
         let enabled = LoginItem.isEnabled
@@ -50,6 +53,14 @@ final class SettingsModel {
 
     func setWidth(_ width: Int, for id: Gap.ID) {
         store.setWidth(width, for: id)
+    }
+
+    func setName(_ name: String, for id: Gap.ID) {
+        store.setName(name, for: id)
+    }
+
+    func setStyle(_ style: GapStyle, for id: Gap.ID) {
+        store.setStyle(style, for: id)
     }
 
     /// The pointer came over a row or left it. While it is over the row the gap shows its

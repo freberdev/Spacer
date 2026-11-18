@@ -6,18 +6,33 @@ import SpacerCore
 enum GapMenu {
     struct Actions {
         var setWidth: (Int) -> Void
+        var setStyle: (GapStyle) -> Void
         var addGap: () -> Void
         var remove: () -> Void
         var openSettings: () -> Void
         var quit: () -> Void
     }
 
-    static func populate(_ menu: NSMenu, width: Int, actions: Actions) {
+    static func populate(_ menu: NSMenu, gap: Gap, actions: Actions) {
         menu.removeAllItems()
 
+        if !gap.displayName.isEmpty {
+            menu.addItem(.sectionHeader(title: gap.displayName))
+        }
         let slider = NSMenuItem()
-        slider.view = WidthSliderView(width: width, onChange: actions.setWidth)
+        slider.view = WidthSliderView(width: gap.width, onChange: actions.setWidth)
         menu.addItem(slider)
+
+        let styles = NSMenu()
+        for style in GapStyle.allCases {
+            let item = ActionItem(style.title) { actions.setStyle(style) }
+            item.state = style == gap.style ? .on : .off
+            styles.addItem(item)
+        }
+        let showAs = NSMenuItem(title: L("menu.showAs"), action: nil, keyEquivalent: "")
+        showAs.submenu = styles
+        menu.addItem(showAs)
+
         menu.addItem(.separator())
         menu.addItem(ActionItem(L("menu.add"), handler: actions.addGap))
         menu.addItem(ActionItem(L("menu.remove"), handler: actions.remove))

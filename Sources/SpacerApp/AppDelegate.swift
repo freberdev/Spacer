@@ -96,13 +96,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func populate(_ menu: NSMenu, for id: Gap.ID) {
         guard let gap = store.gaps.first(where: { $0.id == id }) else { return }
-        GapMenu.populate(menu, width: gap.width, actions: GapMenu.Actions(
+        GapMenu.populate(menu, gap: gap, actions: GapMenu.Actions(
             setWidth: { [weak self] in self?.store.setWidth($0, for: id) },
+            setStyle: { [weak self] in self?.setStyle($0, for: id) },
             addGap: { [weak self] in self?.addGap(leftOf: id) },
             // Not from inside the menu's own action: removing the gap takes the menu with it.
             remove: { [weak self] in Task { @MainActor in self?.store.remove(id) } },
             openSettings: { [weak self] in self?.settings.show() },
             quit: { NSApp.terminate(nil) }))
+    }
+
+    /// A gap that is to show its name needs one. The name is typed in the settings window.
+    private func setStyle(_ style: GapStyle, for id: Gap.ID) {
+        store.setStyle(style, for: id)
+        let gap = store.gaps.first { $0.id == id }
+        if style == .name, gap?.displayName.isEmpty == true { settings.show() }
     }
 
     /// Adds a gap and shows its frame for a moment, so it can be found.

@@ -3,6 +3,11 @@
 
 /* The menu of a gap */
 "menu.width" = "Width";
+"menu.showAs" = "Show As";
+"style.empty" = "Empty";
+"style.line" = "Line";
+"style.dot" = "Dot";
+"style.name" = "Name";
 "menu.add" = "New Gap";
 "menu.remove" = "Remove This Gap";
 "menu.settings" = "Settings…";
@@ -17,7 +22,10 @@
 "settings.gaps" = "Gaps";
 "settings.gaps.empty" = "There are no gaps in the menu bar.";
 "settings.add" = "New Gap";
-"settings.hint" = "To move a gap, hold ⌘ and drag it in the menu bar. Point at a gap to see where it is, and click it to change it.";
+"settings.hint" = "To move a gap, hold ⌘ and drag it in the menu bar. Point at a gap to see where it is, and click it to change it. A gap can show a line, a dot or its name.";
+"settings.gap.name" = "Name";
+"settings.gap.name.label" = "Name of gap %ld";
+"settings.gap.style.label" = "Look of gap %ld";
 "settings.gap.width" = "Width of gap %ld";
 "settings.gap.remove" = "Remove this gap";
 "settings.gap.remove.label" = "Remove gap %ld";

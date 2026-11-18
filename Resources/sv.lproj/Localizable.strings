@@ -3,6 +3,11 @@
 
 /* The menu of a gap */
 "menu.width" = "Bredd";
+"menu.showAs" = "Visa som";
+"style.empty" = "Tomt";
+"style.line" = "Streck";
+"style.dot" = "Punkt";
+"style.name" = "Namn";
 "menu.add" = "Nytt mellanrum";
 "menu.remove" = "Ta bort det här mellanrummet";
 "menu.settings" = "Inställningar…";
@@ -17,7 +22,10 @@
 "settings.gaps" = "Mellanrum";
 "settings.gaps.empty" = "Det finns inga mellanrum i menyraden.";
 "settings.add" = "Nytt mellanrum";
-"settings.hint" = "Håll ⌘ och dra ett mellanrum i menyraden för att flytta det. Peka på ett mellanrum för att se var det är, och klicka på det för att ändra det.";
+"settings.hint" = "Håll ⌘ och dra ett mellanrum i menyraden för att flytta det. Peka på ett mellanrum för att se var det är, och klicka på det för att ändra det. Ett mellanrum kan visa ett streck, en punkt eller sitt namn.";
+"settings.gap.name" = "Namn";
+"settings.gap.name.label" = "Namn på mellanrum %ld";
+"settings.gap.style.label" = "Utseende för mellanrum %ld";
 "settings.gap.width" = "Bredd på mellanrum %ld";
 "settings.gap.remove" = "Ta bort det här mellanrummet";
 "settings.gap.remove.label" = "Ta bort mellanrum %ld";

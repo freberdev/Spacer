@@ -35,6 +35,8 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         window?.makeKeyAndOrderFront(nil)
         // Activation is only a request. The window comes forward even when it is not granted.
         window?.orderFrontRegardless()
+        // Otherwise the first name field takes the keyboard, and looks selected, every time.
+        window?.makeFirstResponder(nil)
     }
 
     func windowWillClose(_ notification: Notification) {
